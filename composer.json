@@ -1,0 +1,23 @@
+{
+    "name": "starjs/offices",
+    "autoload": {
+        "psr-4": {
+            "OfficeConverter\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ivan Yurin",
+            "email": "jesters@inbox.ru"
+        }
+    ],
+    "require": {
+        "php": "8.2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.4"
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}

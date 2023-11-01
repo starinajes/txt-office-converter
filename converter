@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+if (count($argv) < 2) {
+    die("Usage: php converter [command] [options]\n
+        php converter convert:json storage/offices.txt
+    ");
+}
+
+if (!$argv[2]) {
+    die("Path not found in the command\n");
+}
+
+$command = $argv[1];
+$sourcePath = $argv[2];
+
+$commandMap = [
+    'convert:json' => 'JsonConvertCommand',
+    'convert:xml' => 'XmlConvertCommand',
+];
+
+if (!array_key_exists($command, $commandMap)) {
+    die("Unknown command: $command\n");
+}
+
+$commandClassName = "OfficeConverter\\Command\\" . $commandMap[$command];
+
+// run
+(new $commandClassName())->execute($sourcePath);
