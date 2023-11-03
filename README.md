@@ -3,10 +3,10 @@
 
 ## Старт
 ```terminal
-docker compose up --build
 docker compose up -d
-docker compose exec php-app php converter convert:json storage/offices.txt 
-docker compose exec php-app php converter convert:xml storage/offices.txt 
+docker compose ps
+docker exec offices-php-app-1 php converter convert:json storage/offices.txt 
+docker exec offices-php-app-1 php converter convert:xml storage/offices.txt 
 ```
 
 Или без docker в cli
