@@ -1,16 +1,21 @@
 # Конвертер адресов
 Превращает txt в json, xml
 
-## Старт
+## Установка
 ```terminal
+docker compose build app
 docker compose up -d
-docker compose ps
-docker exec offices-php-app-1 php converter convert:json storage/offices.txt 
-docker exec offices-php-app-1 php converter convert:xml storage/offices.txt 
+docker compose exec app composer install
 ```
 
-Или без docker в cli
-```php
+## Запуск приложения
+```terminal
+docker exec offices-convert php converter convert:json storage/offices.txt 
+docker exec offices-convert php converter convert:xml storage/offices.txt 
+```
+
+Или без docker в cli (php8.2)
+```terminal
 php converter convert:json storage/offices.txt
 ```
 
