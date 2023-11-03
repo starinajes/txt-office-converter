@@ -4,8 +4,16 @@ WORKDIR /app
 
 COPY . /app
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN apt-get update
 
-RUN apt-get update && apt-get install -y libxml2-dev libjson-c-dev
+RUN apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
-RUN composer install
+RUN curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer

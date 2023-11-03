@@ -1,6 +1,7 @@
 version: '3'
 services:
-  php-app:
+  app:
+    container_name: offices-convert
     build:
       context: .
       dockerfile: Dockerfile
