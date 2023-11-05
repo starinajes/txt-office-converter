@@ -5,7 +5,7 @@
 ```terminal
 docker compose build app
 docker compose up -d
-docker compose exec app composer install
+docker compose exec offices-convert composer install
 ```
 
 ## Запуск приложения
