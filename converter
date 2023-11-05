@@ -3,9 +3,13 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+// конфиг проекта
+const OUTPUT_DIR_PATH = __DIR__ . '/output/' ;
+const STORAGE_DIR_PATH = __DIR__ . '/storage/';
+
 if (count($argv) < 2) {
-    die("Usage: php converter [command] [options]\n
-        php converter convert:json storage/offices.txt
+    die("Usage: php converter [command] [path-to-file] \n
+        Example: php converter convert:json offices.txt
     ");
 }
 
@@ -18,7 +22,7 @@ $sourcePath = $argv[2];
 
 $commandMap = [
     'convert:json' => 'JsonConvertCommand',
-    'convert:xml' => 'XmlConvertCommand',
+    'convert:xml'  => 'XmlConvertCommand',
 ];
 
 if (!array_key_exists($command, $commandMap)) {

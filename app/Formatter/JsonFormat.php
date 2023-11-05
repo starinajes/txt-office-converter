@@ -2,29 +2,27 @@
 
 namespace OfficeConverter\Formatter;
 
-use OfficeConverter\Parser\TxtParser;
-
 /**
  * Класс отвечает за форматирование офисов в JSON.
  */
-class JsonFormat implements FormatInterface
+class JsonFormat extends FormatBase
 {
-    public function supports(string $format): bool
+    /**
+     *
+     * @return string
+     */
+    public function getTypeFormat(): string
     {
-        return $format === 'json';
+        return 'json';
     }
 
-    public function getOutPutPath(): string
+    /**
+     * @param  mixed  $parsedData
+     *
+     * @return string|false
+     */
+    public function parse(mixed $parsedData): string|false
     {
-        return 'output/offices.json';
-    }
-
-    public function convert(string $data): string
-    {
-        $parsedData = (new TxtParser())->parse($data);
-
-        file_put_contents($this->getOutPutPath(), json_encode($parsedData, JSON_UNESCAPED_UNICODE));
-
-        return $this->getOutPutPath();
+        return json_encode($parsedData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
 }

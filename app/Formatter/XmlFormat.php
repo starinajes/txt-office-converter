@@ -2,49 +2,69 @@
 
 namespace OfficeConverter\Formatter;
 
-use OfficeConverter\Parser\TxtParser;
+use DOMDocument;
+use SimpleXMLElement;
 
 /**
  * Класс отвечает за форматирование офисов в XML.
  */
-class XmlFormat implements FormatInterface
+class XmlFormat extends FormatBase
 {
-    public function supports(string $format): bool
+    public function getTypeFormat(): string
     {
-        return $format === 'xml';
+        return 'xml';
     }
 
-    public function getOutPutPath(): string
+    public function parse(mixed $parsedData): string
     {
-        return 'output/offices.xml';
-    }
-
-    public function convert(string $data): string
-    {
-        $parsedData = (new TxtParser())->parse($data);
-        $xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><companies></companies>');
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><companies></companies>');
+        $fieldToXmlMapping = $this->getMapFields();
 
         foreach ($parsedData as $record) {
             $company = $xml->addChild('company');
 
             foreach ($record as $key => $value) {
-                // Handle different keys as needed
-                if ($key === 'id') {
-                    $company->addChild('company-id', $value);
-                } elseif ($key === 'name') {
-                    $company->addChild('name', $value);
-                } elseif ($key === 'address') {
-                    $company->addChild('address', $value);
-                } elseif ($key === 'phone') {
-                    $phone = $company->addChild('phone');
-                    $phone->addChild('type', 'phone');
-                    $phone->addChild('number', $value);
+                if (isset($fieldToXmlMapping[$key])) {
+                    $elementName = $fieldToXmlMapping[$key];
+                    $company->addChild($elementName, $value);
                 }
             }
         }
 
-        file_put_contents($this->getOutPutPath(), $xml->asXML());
+        $xmlString = $xml->asXML();
 
-        return $this->getOutPutPath();
+        return $this->formatXML($xmlString);
+    }
+
+    /**
+     * Маппинг полей с файлом
+     * todo: можно перейти на Model и связать поля
+     *
+     * @return string[]
+     */
+    private function getMapFields(): array
+    {
+        return [
+            'id'      => 'company-id',
+            'name'    => 'name',
+            'address' => 'address',
+            'phone'   => 'phone',
+        ];
+    }
+
+    /**
+     * Конфиг вывода xml
+     * @param $xml
+     *
+     * @return false|string
+     */
+    private function formatXML($xml): false|string
+    {
+        $dom = new DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML($xml);
+
+        return $dom->saveXML();
     }
 }

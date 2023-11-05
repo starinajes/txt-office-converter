@@ -2,16 +2,17 @@
 
 namespace OfficeConverter\Parser;
 
+use SplFileObject;
+
 /**
- * Интерфейс парсеров
+ * Интерфейс парсера
  */
 interface ParserInterface
 {
     /**
      * Функция запуска парсинга
-     * @param $data
-     *
+     * @param  SplFileObject  $data
      * @return array
      */
-    public function parse($data): array;
+    public function parse(SplFileObject $data): array;
 }
