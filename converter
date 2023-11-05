@@ -21,8 +21,8 @@ $sourcePath = $argv[1];
 $command    = $argv[2];
 
 $commandMap = [
-    'convert:json' => 'JsonConvertCommand',
-    'convert:xml'  => 'XmlConvertCommand',
+    'to:json' => 'JsonConvertCommand',
+    'to:xml'  => 'XmlConvertCommand',
 ];
 
 if (!array_key_exists($command, $commandMap)) {
