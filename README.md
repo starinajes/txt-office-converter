@@ -3,7 +3,7 @@
 
 ## Установка
 ```terminal
-docker compose build app
+docker compose build
 docker compose up -d
 docker compose exec offices-convert composer install
 ```
