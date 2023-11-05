@@ -9,7 +9,7 @@ const STORAGE_DIR_PATH = __DIR__ . '/storage/';
 
 if (count($argv) < 2) {
     die("Usage: php converter [command] [path-to-file] \n
-        Example: php converter convert:json offices.txt
+        Example: php converter offices.txt to:json
     ");
 }
 
@@ -17,8 +17,8 @@ if (!$argv[2]) {
     die("Path not found in the command\n");
 }
 
-$command = $argv[1];
-$sourcePath = $argv[2];
+$sourcePath = $argv[1];
+$command    = $argv[2];
 
 $commandMap = [
     'convert:json' => 'JsonConvertCommand',
