@@ -46,7 +46,7 @@ class OfficeConverter
             throw new Exception('Missed format');
         }
 
-        $this->convertedData = (new $format())->convert($dataIterator);
+        $this->convertedData = $format->convert($dataIterator);
     }
 
     /**
