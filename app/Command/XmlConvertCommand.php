@@ -10,7 +10,7 @@ use OfficeConverter\Parser\TxtParser;
  */
 class XmlConvertCommand extends CommandBase
 {
-    public function getFormatterClass(): XmlFormat
+    public function getFormatter(): XmlFormat
     {
         return new XmlFormat(new TxtParser());
     }

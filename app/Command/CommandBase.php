@@ -19,7 +19,7 @@ abstract class CommandBase implements CommandInterface
      */
     public function execute(string $sourcePath): void
     {
-        $formatter = $this->getFormatterClass();
+        $formatter = $this->getFormatter();
 
         $converter = new OfficeConverter();
         $converter->addFormat($formatter);

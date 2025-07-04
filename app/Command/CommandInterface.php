@@ -15,5 +15,5 @@ interface CommandInterface {
     /**
      * @return mixed
      */
-    public function getFormatterClass(): FormatBase;
+    public function getFormatter(): FormatBase;
 }

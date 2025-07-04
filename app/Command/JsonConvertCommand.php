@@ -10,7 +10,7 @@ use OfficeConverter\Parser\TxtParser;
  */
 class JsonConvertCommand extends CommandBase
 {
-    public function getFormatterClass(): JsonFormat
+    public function getFormatter(): JsonFormat
     {
         return new JsonFormat(new TxtParser());
     }
