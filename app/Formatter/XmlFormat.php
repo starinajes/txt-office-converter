@@ -18,38 +18,17 @@ class XmlFormat extends FormatBase
     public function parse(mixed $parsedData): string
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><companies></companies>');
-        $fieldToXmlMapping = $this->getMapFields();
-
-        foreach ($parsedData as $record) {
+        foreach ($parsedData as $office) {
             $company = $xml->addChild('company');
-
-            foreach ($record as $key => $value) {
-                if (isset($fieldToXmlMapping[$key])) {
-                    $elementName = $fieldToXmlMapping[$key];
-                    $company->addChild($elementName, $value);
-                }
-            }
+            $company->addChild('company-id', $office->getId());
+            $company->addChild('name', $office->getName());
+            $company->addChild('address', $office->getAddress());
+            $company->addChild('phone', $office->getPhone());
         }
 
         $xmlString = $xml->asXML();
 
         return $this->formatXML($xmlString);
-    }
-
-    /**
-     * Маппинг полей с файлом
-     * todo: можно перейти на Model и связать поля
-     *
-     * @return string[]
-     */
-    private function getMapFields(): array
-    {
-        return [
-            'id'      => 'company-id',
-            'name'    => 'name',
-            'address' => 'address',
-            'phone'   => 'phone',
-        ];
     }
 
     /**

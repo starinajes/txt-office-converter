@@ -23,6 +23,15 @@ class JsonFormat extends FormatBase
      */
     public function parse(mixed $parsedData): string|false
     {
-        return json_encode($parsedData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $data = array_map(static function ($office) {
+            return [
+                'id'      => $office->getId(),
+                'name'    => $office->getName(),
+                'address' => $office->getAddress(),
+                'phone'   => $office->getPhone(),
+            ];
+        }, $parsedData);
+
+        return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
 }
