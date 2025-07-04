@@ -3,15 +3,19 @@
 
 ## Установка
 ```terminal
-docker compose build
-docker compose up -d
-docker compose exec offices-convert composer install
+docker compose up -d --build
 ```
 
 ## Запуск приложения
 ```terminal
 docker exec offices-convert php converter offices.txt to:json
 docker exec offices-convert php converter offices.txt to:xml 
+```
+
+Или в контейнере 
+```terminal 
+docker compose exec app bash
+php converter offices.txt to:json
 ```
 
 Или без docker в cli (php8.2)

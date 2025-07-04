@@ -17,3 +17,9 @@ RUN apt-get install -y \
 
 RUN curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer
+    
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["php", "-a"]
