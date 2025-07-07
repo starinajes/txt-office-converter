@@ -19,7 +19,7 @@ docker compose exec app bash
 php converter offices.txt to:json
 ```
 
-Или без docker в cli (php8.2)
+Или без docker в cli
 ```terminal
 php converter offices.txt to:json
 ```
