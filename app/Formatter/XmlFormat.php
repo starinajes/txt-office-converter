@@ -8,7 +8,7 @@ use SimpleXMLElement;
 /**
  * Класс отвечает за форматирование офисов в XML.
  */
-class XmlFormat extends FormatBase
+class XmlFormat implements FormatInterface
 {
     public function getTypeFormat(): FormatType
     {

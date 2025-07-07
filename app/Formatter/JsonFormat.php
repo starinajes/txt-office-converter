@@ -5,7 +5,7 @@ namespace OfficeConverter\Formatter;
 /**
  * Класс отвечает за форматирование офисов в JSON.
  */
-class JsonFormat extends FormatBase
+class JsonFormat implements FormatInterface
 {
     /**
      *

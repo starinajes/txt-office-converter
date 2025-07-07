@@ -6,11 +6,9 @@ use OfficeConverter\Formatter\FormatInterface;
 use OfficeConverter\Formatter\FormatType;
 use OfficeConverter\Formatter\JsonFormat;
 use OfficeConverter\Formatter\XmlFormat;
-use OfficeConverter\Parser\TxtParser;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use SplFileObject;
 
 class OfficeConverterTest extends TestCase
 {
@@ -32,8 +30,8 @@ class OfficeConverterTest extends TestCase
         $format = $this->createMock(FormatInterface::class);
 
         $format->expects($this->once())
-            ->method('convert')
-            ->with($this->isInstanceOf(SplFileObject::class))
+            ->method('parse')
+            ->with($this->isType('array'))
             ->willReturn('converted');
 
         $format->expects($this->any())
@@ -42,7 +40,16 @@ class OfficeConverterTest extends TestCase
 
         $converter->addFormat($format);
 
-        $converter->convert('offices.txt', FormatType::JSON);
+        // Создаём временный файл
+        $tmpFile = tempnam(sys_get_temp_dir(), 'test');
+        file_put_contents($tmpFile, "id: 1\nname: Test\naddress: Addr\nphone: 123\n");
+        $filename = basename($tmpFile) . '.txt';
+        copy($tmpFile, STORAGE_DIR_PATH . $filename);
+
+        $converter->convert($filename, FormatType::JSON);
+
+        unlink($tmpFile);
+        unlink(STORAGE_DIR_PATH . $filename);
     }
 
     /**
@@ -58,7 +65,7 @@ class OfficeConverterTest extends TestCase
         }
         $converter = new OfficeConverter();
 
-        $converter->addFormat(new JsonFormat(new TxtParser()));
+        $converter->addFormat(new JsonFormat());
         $converter->convert('offices.txt', FormatType::JSON);
         $converter->saveConvertedDataToFile('offices.txt', 'json');
         $resultPath = $converter->getOutPathToResult();
@@ -85,7 +92,7 @@ class OfficeConverterTest extends TestCase
         }
         $converter = new OfficeConverter();
 
-        $converter->addFormat(new XmlFormat(new TxtParser()));
+        $converter->addFormat(new XmlFormat());
         $converter->convert('offices.txt', FormatType::XML);
         $converter->saveConvertedDataToFile('offices.txt', 'xml');
         $resultPath = $converter->getOutPathToResult();
@@ -108,5 +115,46 @@ class OfficeConverterTest extends TestCase
         $this->expectException(\Exception::class);
 
         $converter->convert('offices.txt', FormatType::JSON);
+    }
+
+    public function testManualParserOverride()
+    {
+        if (!defined('STORAGE_DIR_PATH')) {
+            define('STORAGE_DIR_PATH', __DIR__ . '/../../storage/');
+        }
+        if (!defined('OUTPUT_DIR_PATH')) {
+            define('OUTPUT_DIR_PATH', __DIR__ . '/../../output/');
+        }
+        $converter = new OfficeConverter();
+        $converter->addFormat(new JsonFormat());
+
+        $mockParser = $this->createMock(\OfficeConverter\Parser\ParserInterface::class);
+        $mockParser->expects($this->once())
+            ->method('parse')
+            ->willReturn([
+                (object)['id' => 42, 'name' => 'TestName', 'address' => 'TestAddr', 'phone' => '555']
+            ]);
+
+        $converter->addParser($mockParser);
+        // Создаём временный файл
+        $tmpFile = tempnam(sys_get_temp_dir(), 'test');
+        file_put_contents($tmpFile, "id: 1\nname: Test\naddress: Addr\nphone: 123\n");
+        $filename = basename($tmpFile) . '.txt';
+        copy($tmpFile, STORAGE_DIR_PATH . $filename);
+
+        $converter->convert($filename, FormatType::JSON);
+        $converter->saveConvertedDataToFile($filename, 'json');
+        $resultPath = $converter->getOutPathToResult();
+        $json = file_get_contents($resultPath);
+        $data = json_decode($json, true);
+
+        $this->assertIsArray($data);
+        $this->assertCount(1, $data);
+        $this->assertEquals('TestName', $data[0]['name']);
+        $this->assertEquals(42, $data[0]['id']);
+
+        unlink($tmpFile);
+        unlink(STORAGE_DIR_PATH . $filename);
+        unlink($resultPath);
     }
 }

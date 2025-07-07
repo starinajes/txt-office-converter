@@ -5,6 +5,7 @@ use Exception;
 use OfficeConverter\Formatter\JsonFormat;
 use OfficeConverter\Formatter\XmlFormat;
 use OfficeConverter\Model\Office;
+use OfficeConverter\Parser\ParserFactory;
 use OfficeConverter\Parser\TxtParser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
@@ -18,7 +19,7 @@ class ParserFormatterTest extends TestCase
     private function getOffices(): array
     {
         $file = new SplFileObject(dirname(__DIR__, 2) . '/storage/offices.txt');
-        return (new TxtParser())->parse($file);
+        return new TxtParser()->parse($file);
     }
 
     /**
@@ -33,7 +34,7 @@ class ParserFormatterTest extends TestCase
 
         $first = $offices[0];
 
-        $this->assertSame('1375', $first->id);
+        $this->assertEquals('1375', $first->id);
         $this->assertSame('До «Воздвиженское»', $first->name);
         $this->assertSame('г.Москва улица Воздвиженка дом 10', $first->address);
         $this->assertSame('8-800-775-86-86', $first->phone);
@@ -45,11 +46,11 @@ class ParserFormatterTest extends TestCase
     public function testJsonFormatterSerializesCollection(): void
     {
         $offices = $this->getOffices();
-        $json = (new JsonFormat(new TxtParser()))->parse($offices);
+        $json = new JsonFormat()->parse($offices);
         $data = json_decode($json, true);
 
         $this->assertCount(3, $data);
-        $this->assertSame('1375', $data[0]['id']);
+        $this->assertEquals('1375', $data[0]['id']);
         $this->assertSame('До «Мира проспект»', $data[1]['name']);
     }
 
@@ -59,7 +60,7 @@ class ParserFormatterTest extends TestCase
     public function testXmlFormatterSerializesCollection(): void
     {
         $offices = $this->getOffices();
-        $xml = (new XmlFormat(new TxtParser()))->parse($offices);
+        $xml = new XmlFormat()->parse($offices);
         $xmlObj = new SimpleXMLElement($xml);
 
         $this->assertCount(3, $xmlObj->company);
@@ -73,7 +74,7 @@ class ParserFormatterTest extends TestCase
     {
         $tmp = tempnam(sys_get_temp_dir(), 'empty');
         $file = new SplFileObject($tmp, 'r');
-        $offices = (new TxtParser())->parse($file);
+        $offices = new TxtParser()->parse($file);
 
         $this->assertIsArray($offices);
         $this->assertCount(0, $offices);
@@ -89,7 +90,7 @@ class ParserFormatterTest extends TestCase
         $tmp = tempnam(sys_get_temp_dir(), 'malformed');
         file_put_contents($tmp, "id: 1\nname\naddress: test\n");
         $file = new SplFileObject($tmp, 'r');
-        $offices = (new TxtParser())->parse($file);
+        $offices = new TxtParser()->parse($file);
 
         $this->assertIsArray($offices);
         $this->assertCount(1, $offices);
@@ -100,7 +101,7 @@ class ParserFormatterTest extends TestCase
 
     public function testJsonFormatterHandlesEmptyCollection(): void
     {
-        $json = (new JsonFormat(new TxtParser()))->parse([]);
+        $json = new JsonFormat()->parse([]);
         $data = json_decode($json, true);
 
         $this->assertIsArray($data);
@@ -112,9 +113,18 @@ class ParserFormatterTest extends TestCase
      */
     public function testXmlFormatterHandlesEmptyCollection(): void
     {
-        $xml = (new XmlFormat(new TxtParser()))->parse([]);
+        $xml = new XmlFormat()->parse([]);
         $xmlObj = new SimpleXMLElement($xml);
 
         $this->assertCount(0, $xmlObj->company);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testParserFactoryReturnsCorrectParser()
+    {
+        $parser = ParserFactory::createParser('file.txt');
+        $this->assertInstanceOf(\OfficeConverter\Parser\TxtParser::class, $parser);
     }
 }

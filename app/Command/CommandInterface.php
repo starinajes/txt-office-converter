@@ -2,20 +2,11 @@
 
 namespace OfficeConverter\Command;
 
-use OfficeConverter\Formatter\FormatBase;
-use OfficeConverter\Formatter\FormatType;
+use OfficeConverter\Formatter\FormatInterface;
 
 interface CommandInterface {
     /**
-     * Запуск команды
-     * @param  string  $sourcePath
-     * @param  FormatType $formatType
-     * @return string
+     * @return FormatInterface
      */
-    public function execute(string $sourcePath, FormatType $formatType): string;
-
-    /**
-     * @return mixed
-     */
-    public function getFormatter(): FormatBase;
+    public function getFormatter(): FormatInterface;
 }

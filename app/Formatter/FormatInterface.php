@@ -2,24 +2,13 @@
 
 namespace OfficeConverter\Formatter;
 
-use SplFileObject;
-
 /**
- * Интерфейс для работы с форматтерами
+ * Интерфейс для работы с форматами
  */
 interface FormatInterface
 {
     /**
-     * Функция конвертирования
-     *
-     * @param  SplFileObject  $data
-     *
-     * @return string
-     */
-    public function convert(SplFileObject $data): string;
-
-    /**
-     * Метод получения типа форматтера
+     * Метод получения типа формата
      * @return FormatType
      */
     public function getTypeFormat(): FormatType;
@@ -31,12 +20,4 @@ interface FormatInterface
      * @return mixed
      */
     public function parse(mixed $parsedData): mixed;
-
-    /**
-     * Метод проверки, какой формат поддерживается классом
-     * @param  string  $format
-     *
-     * @return bool
-     */
-    public function isSupportFormat(string $format): bool;
 }

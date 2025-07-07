@@ -5,7 +5,6 @@ use Exception;
 use OfficeConverter\Command\JsonConvertCommand;
 use OfficeConverter\Controller\OfficeConverter;
 use OfficeConverter\Formatter\FormatType;
-use OfficeConverter\Formatter\JsonFormat;
 use PHPUnit\Framework\TestCase;
 
 class JsonConvertCommandTest extends TestCase

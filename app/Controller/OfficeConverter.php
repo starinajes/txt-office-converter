@@ -6,6 +6,8 @@ use Exception;
 use OfficeConverter\Formatter\FormatInterface;
 use SplFileObject;
 use OfficeConverter\Formatter\FormatType;
+use OfficeConverter\Parser\ParserInterface;
+use OfficeConverter\Parser\ParserFactory;
 
 /**
  * Контроллер конвертации
@@ -21,6 +23,8 @@ class OfficeConverter
      */
     private array $formats = [];
 
+    private ?ParserInterface $parser = null;
+
     /**
      * @param  FormatInterface  $format
      *
@@ -29,6 +33,11 @@ class OfficeConverter
     public function addFormat(FormatInterface $format): void
     {
         $this->formats[] = $format;
+    }
+
+    public function addParser(ParserInterface $parser): void
+    {
+        $this->parser = $parser;
     }
 
     /**
@@ -40,14 +49,19 @@ class OfficeConverter
      */
     public function convert(string $sourcePath, FormatType $format): void
     {
+        if (!$this->parser) {
+            $this->parser = ParserFactory::createParser($sourcePath);
+        }
+
         $dataIterator = $this->readFromFile(STORAGE_DIR_PATH.$sourcePath);
+        $parsedData = $this->parser->parse($dataIterator);
         $formatInstance = $this->getFormat($format);
 
         if (!$formatInstance) {
             throw new Exception('Missed format');
         }
 
-        $this->convertedData = $formatInstance->convert($dataIterator);
+        $this->convertedData = $formatInstance->parse($parsedData);
     }
 
     /**
