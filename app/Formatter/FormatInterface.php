@@ -20,9 +20,9 @@ interface FormatInterface
 
     /**
      * Метод получения типа форматтера
-     * @return string
+     * @return FormatType
      */
-    public function getTypeFormat(): string;
+    public function getTypeFormat(): FormatType;
 
     /**
      * Метод парсит полученные данные

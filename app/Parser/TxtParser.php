@@ -13,6 +13,7 @@ class TxtParser implements ParserInterface
 {
     /**
      * @throws Exception
+     * @return Office[]
      */
     public function parse(SplFileObject $data): array
     {
@@ -48,10 +49,10 @@ class TxtParser implements ParserInterface
     private function createOffice(array $record): Office
     {
         return new Office(
-            $record['id'] ?? null,
-            $record['name'] ?? null,
-            $record['address'] ?? null,
-            $record['phone'] ?? null
+            id: (int)($record['id'] ?? 0),
+            name: (string)($record['name'] ?? ''),
+            address: (string)($record['address'] ?? ''),
+            phone: (string)($record['phone'] ?? '')
         );
     }
 }

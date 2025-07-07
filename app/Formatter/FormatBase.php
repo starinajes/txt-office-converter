@@ -34,6 +34,6 @@ abstract class FormatBase implements FormatInterface
      */
     public function isSupportFormat(string $format): bool
     {
-        return $format === $this->getTypeFormat();
+        return $format == $this->getTypeFormat();
     }
 }

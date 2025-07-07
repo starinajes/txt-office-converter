@@ -5,6 +5,7 @@ namespace OfficeConverter\Controller;
 use Exception;
 use OfficeConverter\Formatter\FormatInterface;
 use SplFileObject;
+use OfficeConverter\Formatter\FormatType;
 
 /**
  * Контроллер конвертации
@@ -33,20 +34,20 @@ class OfficeConverter
     /**
      * Метод запуска конвертации
      * @param  string  $sourcePath
-     * @param  string  $format
+     * @param  FormatType  $format
      *
      * @throws Exception
      */
-    public function convert(string $sourcePath, string $format): void
+    public function convert(string $sourcePath, FormatType $format): void
     {
         $dataIterator = $this->readFromFile(STORAGE_DIR_PATH.$sourcePath);
-        $format       = $this->getFormat($format);
+        $formatInstance = $this->getFormat($format);
 
-        if (!$format) {
+        if (!$formatInstance) {
             throw new Exception('Missed format');
         }
 
-        $this->convertedData = $format->convert($dataIterator);
+        $this->convertedData = $formatInstance->convert($dataIterator);
     }
 
     /**
@@ -105,19 +106,34 @@ class OfficeConverter
     /**
      * Получить нужный формат
      *
-     * @param  string  $format
+     * @param  FormatType  $format
      *
      * @return FormatInterface|null
      * @throws Exception
      */
-    private function getFormat(string $format): ?FormatInterface
+    private function getFormat(FormatType $format): ?FormatInterface
     {
         foreach ($this->formats as $formatInstance) {
-            if ($formatInstance->isSupportFormat($format)) {
+            if ($formatInstance->getTypeFormat() === $format) {
                 return $formatInstance;
             }
         }
 
-        throw new Exception("Unsupported format: $format");
+        throw new Exception("Unsupported format: $format->value");
+    }
+
+    /**
+     * Преобразовать строку в FormatType
+     * @param string $format
+     * @return FormatType
+     * @throws Exception
+     */
+    public static function formatTypeFromString(string $format): FormatType
+    {
+        return match(strtolower($format)) {
+            'json' => FormatType::JSON,
+            'xml' => FormatType::XML,
+            default => throw new Exception("Unknown format: $format"),
+        };
     }
 }

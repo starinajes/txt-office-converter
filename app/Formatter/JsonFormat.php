@@ -9,11 +9,11 @@ class JsonFormat extends FormatBase
 {
     /**
      *
-     * @return string
+     * @return FormatType
      */
-    public function getTypeFormat(): string
+    public function getTypeFormat(): FormatType
     {
-        return 'json';
+        return FormatType::JSON;
     }
 
     /**
@@ -25,12 +25,12 @@ class JsonFormat extends FormatBase
     {
         $data = array_map(static function ($office) {
             return [
-                'id'      => $office->getId(),
-                'name'    => $office->getName(),
-                'address' => $office->getAddress(),
-                'phone'   => $office->getPhone(),
+                'id'      => $office->id,
+                'name'    => $office->name,
+                'address' => $office->address,
+                'phone'   => $office->phone,
             ];
-        }, $parsedData);
+        }, is_array($parsedData) ? $parsedData : iterator_to_array($parsedData));
 
         return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }

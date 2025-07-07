@@ -3,6 +3,9 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use OfficeConverter\Controller\OfficeConverter;
+use OfficeConverter\Command\CommandFactory;
+
 // конфиг проекта
 const OUTPUT_DIR_PATH = __DIR__ . '/output/' ;
 const STORAGE_DIR_PATH = __DIR__ . '/storage/';
@@ -20,16 +23,12 @@ if (!$argv[2]) {
 $sourcePath = $argv[1];
 $command    = $argv[2];
 
-$commandMap = [
-    'to:json' => 'JsonConvertCommand',
-    'to:xml'  => 'XmlConvertCommand',
-];
-
-if (!array_key_exists($command, $commandMap)) {
-    die("Unknown command: $command\n");
-}
-
-$commandClassName = "OfficeConverter\\Command\\" . $commandMap[$command];
-
 // run
-(new $commandClassName())->execute($sourcePath);
+try {
+    $formatType = OfficeConverter::formatTypeFromString(str_replace('to:', '', $command));
+    $commandInstance = CommandFactory::create($command);
+    $resultPath = $commandInstance->execute($sourcePath, $formatType);
+    echo "Conversion successful. Output file: $resultPath" . PHP_EOL;
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . PHP_EOL;
+}

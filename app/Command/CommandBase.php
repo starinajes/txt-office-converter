@@ -4,33 +4,37 @@ namespace OfficeConverter\Command;
 
 use Exception;
 use OfficeConverter\Controller\OfficeConverter;
+use OfficeConverter\Formatter\FormatType;
 
 /**
  * Базовый класс cli команд
  */
 abstract class CommandBase implements CommandInterface
 {
+    protected OfficeConverter $converter;
+
+    public function __construct(OfficeConverter $converter)
+    {
+        $this->converter = $converter;
+    }
+
     /**
      * Метод запуска команды
      *
      * @param  string  $sourcePath
+     * @param  FormatType  $formatType
      *
+     * @return string Путь к результату
      * @throws Exception
      */
-    public function execute(string $sourcePath): void
+    public function execute(string $sourcePath, FormatType $formatType): string
     {
         $formatter = $this->getFormatter();
+        $this->converter->addFormat($formatter);
 
-        $converter = new OfficeConverter();
-        $converter->addFormat($formatter);
+        $this->converter->convert($sourcePath, $formatType);
+        $this->converter->saveConvertedDataToFile($sourcePath, $formatType->value);
 
-        try {
-            $converter->convert($sourcePath, $formatter->getTypeFormat());
-            $converter->saveConvertedDataToFile($sourcePath, $formatter->getTypeFormat());
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage() . "\n";
-        }
-
-        echo "Conversion successful. Output file: " . $converter->getOutPathToResult() . PHP_EOL;
+        return $this->converter->getOutPathToResult();
     }
 }

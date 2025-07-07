@@ -12,7 +12,7 @@ interface ParserInterface
     /**
      * Функция запуска парсинга
      * @param  SplFileObject  $data
-     * @return array
+     * @return object[]
      */
     public function parse(SplFileObject $data): array;
 }

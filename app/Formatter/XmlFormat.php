@@ -10,20 +10,20 @@ use SimpleXMLElement;
  */
 class XmlFormat extends FormatBase
 {
-    public function getTypeFormat(): string
+    public function getTypeFormat(): FormatType
     {
-        return 'xml';
+        return FormatType::XML;
     }
 
     public function parse(mixed $parsedData): string
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><companies></companies>');
-        foreach ($parsedData as $office) {
+        foreach (is_array($parsedData) ? $parsedData : iterator_to_array($parsedData) as $office) {
             $company = $xml->addChild('company');
-            $company->addChild('company-id', $office->getId());
-            $company->addChild('name', $office->getName());
-            $company->addChild('address', $office->getAddress());
-            $company->addChild('phone', $office->getPhone());
+            $company->addChild('company-id', $office->id);
+            $company->addChild('name', $office->name);
+            $company->addChild('address', $office->address);
+            $company->addChild('phone', $office->phone);
         }
 
         $xmlString = $xml->asXML();
