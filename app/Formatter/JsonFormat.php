@@ -19,9 +19,9 @@ class JsonFormat implements FormatInterface
     /**
      * @param  mixed  $parsedData
      *
-     * @return string|false
+     * @return string
      */
-    public function parse(mixed $parsedData): string|false
+    public function format(mixed $parsedData): string
     {
         $data = array_map(static function ($office) {
             return [

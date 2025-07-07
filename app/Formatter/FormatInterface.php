@@ -19,5 +19,5 @@ interface FormatInterface
      *
      * @return mixed
      */
-    public function parse(mixed $parsedData): mixed;
+    public function format(array $parsedData): string;
 }

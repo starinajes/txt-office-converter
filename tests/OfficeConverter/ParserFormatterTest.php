@@ -46,7 +46,7 @@ class ParserFormatterTest extends TestCase
     public function testJsonFormatterSerializesCollection(): void
     {
         $offices = $this->getOffices();
-        $json = new JsonFormat()->parse($offices);
+        $json = new JsonFormat()->format($offices);
         $data = json_decode($json, true);
 
         $this->assertCount(3, $data);
@@ -60,7 +60,7 @@ class ParserFormatterTest extends TestCase
     public function testXmlFormatterSerializesCollection(): void
     {
         $offices = $this->getOffices();
-        $xml = new XmlFormat()->parse($offices);
+        $xml = new XmlFormat()->format($offices);
         $xmlObj = new SimpleXMLElement($xml);
 
         $this->assertCount(3, $xmlObj->company);
@@ -101,7 +101,7 @@ class ParserFormatterTest extends TestCase
 
     public function testJsonFormatterHandlesEmptyCollection(): void
     {
-        $json = new JsonFormat()->parse([]);
+        $json = new JsonFormat()->format([]);
         $data = json_decode($json, true);
 
         $this->assertIsArray($data);
@@ -113,7 +113,7 @@ class ParserFormatterTest extends TestCase
      */
     public function testXmlFormatterHandlesEmptyCollection(): void
     {
-        $xml = new XmlFormat()->parse([]);
+        $xml = new XmlFormat()->format([]);
         $xmlObj = new SimpleXMLElement($xml);
 
         $this->assertCount(0, $xmlObj->company);

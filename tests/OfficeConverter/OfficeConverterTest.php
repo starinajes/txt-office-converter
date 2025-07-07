@@ -30,7 +30,7 @@ class OfficeConverterTest extends TestCase
         $format = $this->createMock(FormatInterface::class);
 
         $format->expects($this->once())
-            ->method('parse')
+            ->method('format')
             ->with($this->isType('array'))
             ->willReturn('converted');
 
