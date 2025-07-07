@@ -2,11 +2,7 @@
 
 namespace OfficeConverter\Command;
 
-use OfficeConverter\Formatter\FormatInterface;
-
 interface CommandInterface {
-    /**
-     * @return FormatInterface
-     */
-    public function getFormatter(): FormatInterface;
+    public static function fromArgs(array $args): object;
+    public function execute(object $config): mixed;
 }

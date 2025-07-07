@@ -5,7 +5,6 @@ namespace OfficeConverter\Controller;
 use Exception;
 use OfficeConverter\Formatter\FormatInterface;
 use SplFileObject;
-use OfficeConverter\Formatter\FormatType;
 use OfficeConverter\Parser\ParserInterface;
 use OfficeConverter\Parser\ParserFactory;
 
@@ -16,83 +15,75 @@ class OfficeConverter
 {
     private string $convertedData = '';
     private string $outPathToResult = '';
-
-    /**
-     * @FormatInterface[]
-     * @var array
-     */
-    private array $formats = [];
-
     private ?ParserInterface $parser = null;
+    private ?FormatInterface $formatter = null;
+    private ?string $sourcePath = null;
 
-    /**
-     * @param  FormatInterface  $format
-     *
-     * @return void
-     */
-    public function addFormat(FormatInterface $format): void
+    public function setSourcePath(string $sourcePath): self
     {
-        $this->formats[] = $format;
+        $this->sourcePath = $sourcePath;
+        return $this;
     }
 
-    public function addParser(ParserInterface $parser): void
+    public function addParser(ParserInterface $parser): self
     {
         $this->parser = $parser;
+        return $this;
+    }
+
+    public function addFormatter(FormatInterface $formatter): self
+    {
+        $this->formatter = $formatter;
+        return $this;
     }
 
     /**
      * Метод запуска конвертации
-     * @param  string  $sourcePath
-     * @param  FormatType  $format
-     *
+     * @return OfficeConverter
      * @throws Exception
      */
-    public function convert(string $sourcePath, FormatType $format): void
+    public function convert(): self
     {
+        if (!$this->sourcePath) {
+            throw new Exception('Source path not set');
+        }
+
         if (!$this->parser) {
-            $this->parser = ParserFactory::createParser($sourcePath);
+            $this->parser = ParserFactory::createParser($this->sourcePath);
         }
 
-        $dataIterator = $this->readFromFile(STORAGE_DIR_PATH.$sourcePath);
+        if (!$this->formatter) {
+            throw new Exception('Formatter not set');
+        }
+
+        $dataIterator = $this->readFromFile(STORAGE_DIR_PATH . $this->sourcePath);
         $parsedData = $this->parser->parse($dataIterator);
-        $formatInstance = $this->getFormat($format);
 
-        if (!$formatInstance) {
-            throw new Exception('Missed format');
-        }
+        $this->convertedData = $this->formatter->format($parsedData);
 
-        $this->convertedData = $formatInstance->format($parsedData);
+        return $this;
     }
 
     /**
-     * Метод чтения файла
-     *
-     * @param  string  $sourcePath
-     *
-     * @return SplFileObject
      * @throws Exception
      */
     private function readFromFile(string $sourcePath): SplFileObject
     {
         if (!file_exists($sourcePath)) {
-            throw new Exception("File not found: $sourcePath");
+            throw new Exception("Файл не найден: $sourcePath");
         }
 
         return new SplFileObject($sourcePath);
     }
 
     /**
-     * Метод сохранения спарсенных данных в файл.
-     * Поддерживает вложенность
-     * @param string $sourcePath
-     * @param string $fileType
      * @throws Exception
      */
-    public function saveConvertedDataToFile(string $sourcePath, string $fileType): void
+    public function saveConvertedDataToFile(string $sourcePath, string $fileType): self
     {
         $extension = pathinfo($sourcePath, PATHINFO_EXTENSION);
         $newPath   = str_replace(".$extension", ".$fileType", $sourcePath);
-        $fileName  = OUTPUT_DIR_PATH.$newPath;
+        $fileName  = OUTPUT_DIR_PATH . $newPath;
 
         $directory = dirname($fileName);
         if (!is_dir($directory)) {
@@ -100,54 +91,18 @@ class OfficeConverter
         }
 
         try {
-            file_put_contents( $fileName, $this->convertedData);
+            file_put_contents($fileName, $this->convertedData);
         } catch (Exception $exception) {
-            throw new Exception("Error: failed to save file - " . $exception->getMessage());
+            throw new Exception("Ошибка: не удалось сохранить файл - " . $exception->getMessage());
         }
 
         $this->outPathToResult = $fileName;
+
+        return $this;
     }
 
-    /**
-     * Метод возвращает конечный путь до созданного файла
-     * @return string
-     */
     public function getOutPathToResult(): string
     {
         return $this->outPathToResult;
-    }
-
-    /**
-     * Получить нужный формат
-     *
-     * @param  FormatType  $format
-     *
-     * @return FormatInterface|null
-     * @throws Exception
-     */
-    private function getFormat(FormatType $format): ?FormatInterface
-    {
-        foreach ($this->formats as $formatInstance) {
-            if ($formatInstance->getTypeFormat() === $format) {
-                return $formatInstance;
-            }
-        }
-
-        throw new Exception("Unsupported format: $format->value");
-    }
-
-    /**
-     * Преобразовать строку в FormatType
-     * @param string $format
-     * @return FormatType
-     * @throws Exception
-     */
-    public static function formatTypeFromString(string $format): FormatType
-    {
-        return match(strtolower($format)) {
-            'json' => FormatType::JSON,
-            'xml' => FormatType::XML,
-            default => throw new Exception("Unknown format: $format"),
-        };
     }
 }

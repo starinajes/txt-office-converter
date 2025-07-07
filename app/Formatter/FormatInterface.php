@@ -8,12 +8,6 @@ namespace OfficeConverter\Formatter;
 interface FormatInterface
 {
     /**
-     * Метод получения типа формата
-     * @return FormatType
-     */
-    public function getTypeFormat(): FormatType;
-
-    /**
      * Метод парсит полученные данные
      * @param  mixed  $parsedData
      *

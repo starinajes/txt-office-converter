@@ -8,15 +8,6 @@ namespace OfficeConverter\Formatter;
 class JsonFormat implements FormatInterface
 {
     /**
-     *
-     * @return FormatType
-     */
-    public function getTypeFormat(): FormatType
-    {
-        return FormatType::JSON;
-    }
-
-    /**
      * @param  mixed  $parsedData
      *
      * @return string

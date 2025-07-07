@@ -11,24 +11,24 @@ docker compose up -d --build
 
 ## Запуск приложения
 ```terminal
-docker exec offices-convert php converter offices.txt to:json
-docker exec offices-convert php converter offices.txt to:xml 
+docker exec offices-convert php converter convert offices.txt to:json
+docker exec offices-convert php converter convert offices.txt to:xml 
 ```
 
 Или в контейнере 
 ```terminal 
 docker compose exec app bash
-php converter offices.txt to:json
+php converter convert offices.txt to:json
 ```
 
 Или без docker в cli
 ```terminal
-php converter offices.txt to:json
+php converter convert offices.txt to:json
 ```
 
 ### Формат команды
 ```terminal
-php converter [path-to-file] [command]
+php converter [command] [path-to-file] [format]
 ```
 
 [path-to-file] — путь до файла.

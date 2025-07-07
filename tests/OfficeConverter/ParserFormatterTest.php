@@ -10,6 +10,7 @@ use OfficeConverter\Parser\TxtParser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use SplFileObject;
+use OfficeConverter\Formatter\FormatterFactory;
 
 class ParserFormatterTest extends TestCase
 {
@@ -126,5 +127,29 @@ class ParserFormatterTest extends TestCase
     {
         $parser = ParserFactory::createParser('file.txt');
         $this->assertInstanceOf(\OfficeConverter\Parser\TxtParser::class, $parser);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testFormatterFactoryCreatesJsonFormat()
+    {
+        $formatter = FormatterFactory::create('json');
+        $this->assertInstanceOf(JsonFormat::class, $formatter);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testFormatterFactoryCreatesXmlFormat()
+    {
+        $formatter = FormatterFactory::create('xml');
+        $this->assertInstanceOf(XmlFormat::class, $formatter);
+    }
+
+    public function testFormatterFactoryThrowsOnUnknownFormat()
+    {
+        $this->expectException(Exception::class);
+        FormatterFactory::create('unknown');
     }
 }

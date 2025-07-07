@@ -10,11 +10,6 @@ use SimpleXMLElement;
  */
 class XmlFormat implements FormatInterface
 {
-    public function getTypeFormat(): FormatType
-    {
-        return FormatType::XML;
-    }
-
     public function format(mixed $parsedData): string
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><companies></companies>');

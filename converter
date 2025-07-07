@@ -3,32 +3,31 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use OfficeConverter\Controller\OfficeConverter;
-use OfficeConverter\Command\CommandFactory;
+use OfficeConverter\Command\CommandRegistry;
 
 // конфиг проекта
 const OUTPUT_DIR_PATH = __DIR__ . '/output/' ;
 const STORAGE_DIR_PATH = __DIR__ . '/storage/';
 
-if (count($argv) < 2) {
-    die("Usage: php converter [command] [path-to-file] \n
-        Example: php converter offices.txt to:json
-    ");
+if (count($argv) < 3) {
+    die("Использование: php converter [command] [args...]\n\nПример: php converter convert offices.txt to:json\n");
 }
 
-if (!$argv[2]) {
-    die("Path not found in the command\n");
-}
+$argv = $_SERVER['argv'];
+array_shift($argv); // убрать имя скрипта
 
-$sourcePath = $argv[1];
-$command    = $argv[2];
+// convert, validate, stats и т.д.
+$commandName = array_shift($argv);
 
-// run
 try {
-    $formatType = OfficeConverter::formatTypeFromString(str_replace('to:', '', $command));
-    $commandInstance = CommandFactory::create($command);
-    $resultPath = $commandInstance->execute($sourcePath, $formatType);
-    echo "Conversion successful. Output file: $resultPath" . PHP_EOL;
+    $command = CommandRegistry::getCommand($commandName);
+    $config  = CommandRegistry::createConfig($commandName, $argv);
+    $result  = $command->execute($config);
+
+    if ($result !== null) {
+        echo $result;
+    }
 } catch (Exception $e) {
-    echo "Error: " . $e->getMessage() . PHP_EOL;
+    echo "Ошибка: " . $e->getMessage() . PHP_EOL;
+    exit(1);
 }
