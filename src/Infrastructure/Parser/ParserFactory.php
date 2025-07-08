@@ -14,16 +14,16 @@ class ParserFactory
     {
         if ($type) {
             return match ($type) {
-                'car' => new CsvCarParser(), // или TxtCarParser, если появится
+                'car' => new CsvCarParser(),
                 'office' => new TxtOfficeParser(),
-                // ... другие типы
+                // другие типы
                 default => throw new Exception("Неизвестный тип: $type"),
             };
         }
 
         $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
 
-        // Дефолтное поведение (можно доработать)
+        // Дефолт
         return match ($ext) {
             'txt' => new TxtOfficeParser(),
             'csv' => new CsvCarParser(),
