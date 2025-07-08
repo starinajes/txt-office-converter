@@ -1,10 +1,15 @@
 <?php
 
+namespace Tests\UI\Web;
+
 use PHPUnit\Framework\TestCase;
 use App\UI\Web\OfficeController;
 
 class OfficeControllerTest extends TestCase
 {
+    /**
+     * @throws \Exception
+     */
     public function testConvertActionSuccess()
     {
         $controller = new OfficeController();

@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Infrastructure\Parser;
+
 use PHPUnit\Framework\TestCase;
 use App\Infrastructure\Parser\TxtParser;
 use App\Domain\Office\Entity\Office;

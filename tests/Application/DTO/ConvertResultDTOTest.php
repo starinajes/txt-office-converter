@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Application\DTO;
+
 use PHPUnit\Framework\TestCase;
 use App\Application\Command\DTO\ConvertResultDTO;
 

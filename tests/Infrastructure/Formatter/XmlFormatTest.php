@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Infrastructure\Formatter;
+
 use PHPUnit\Framework\TestCase;
 use App\Infrastructure\Formatter\XmlFormat;
 use App\Domain\Office\Entity\Office;

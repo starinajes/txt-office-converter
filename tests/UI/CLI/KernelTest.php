@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\UI\CLI;
+
 use PHPUnit\Framework\TestCase;
 use App\UI\CLI\Kernel;
 

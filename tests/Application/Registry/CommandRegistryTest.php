@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Application\Registry;
+
+use Exception;
 use PHPUnit\Framework\TestCase;
 use App\Application\Command\CommandRegistry;
 use App\Application\Command\ConvertOfficeFileHandler;

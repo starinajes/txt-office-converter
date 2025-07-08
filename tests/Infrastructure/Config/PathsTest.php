@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Infrastructure\Config;
+
 use PHPUnit\Framework\TestCase;
 use App\Infrastructure\Config\Paths;
 

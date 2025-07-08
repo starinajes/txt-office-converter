@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Infrastructure\Factory;
+
+use Exception;
 use PHPUnit\Framework\TestCase;
 use App\Infrastructure\Formatter\FormatterFactory;
 use App\Infrastructure\Formatter\JsonFormat;

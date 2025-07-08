@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Domain\Service;
+
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use App\Domain\Office\Service\OfficeConverterService;
 use App\Domain\Office\Parser\ParserInterface;
@@ -8,7 +11,7 @@ use App\Domain\Office\Formatter\FormatInterface;
 class OfficeConverterServiceTest extends TestCase
 {
     /**
-     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws Exception
      */
     public function testConvertReturnsFormattedString()
     {
@@ -24,7 +27,7 @@ class OfficeConverterServiceTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws Exception
      */
     public function testConvertWithEmptyResult()
     {
@@ -40,7 +43,7 @@ class OfficeConverterServiceTest extends TestCase
     }
 
     /**
-     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws Exception
      */
     public function testFormatterThrowsException()
     {

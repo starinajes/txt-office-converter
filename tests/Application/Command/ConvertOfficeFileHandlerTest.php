@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Application\Command;
+
+use Exception;
 use PHPUnit\Framework\TestCase;
 use App\Application\Command\ConvertOfficeFileHandler;
 use App\Application\Command\ConvertOfficeFileCommand;
@@ -9,6 +12,9 @@ use App\Infrastructure\Formatter\FormatterFactory;
 
 class ConvertOfficeFileHandlerTest extends TestCase
 {
+    /**
+     * @throws Exception
+     */
     public function testHandleReturnsCorrectString()
     {
         $handler = new ConvertOfficeFileHandler(

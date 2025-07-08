@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Infrastructure\Factory;
+
 use PHPUnit\Framework\TestCase;
 use App\Infrastructure\Parser\ParserFactory;
 use App\Infrastructure\Parser\TxtParser;
