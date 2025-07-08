@@ -11,7 +11,7 @@ class TxtParserTest extends TestCase
 {
     public function testParserReturnsOfficeObjects()
     {
-        $testFile = Paths::STORAGE . 'test_parser.txt';
+        $testFile = Paths::getStoragePath() . 'test_parser.txt';
         file_put_contents($testFile, "id: 1\nname: Test\naddress: Addr\nphone: 123\n");
         $parser = new TxtParser();
         $offices = $parser->parse('test_parser.txt');
@@ -24,7 +24,7 @@ class TxtParserTest extends TestCase
 
     public function testParserHandlesEmptyFile()
     {
-        $testFile = Paths::STORAGE . 'empty.txt';
+        $testFile = Paths::getStoragePath() . 'empty.txt';
         file_put_contents($testFile, "");
 
         $parser = new TxtParser();

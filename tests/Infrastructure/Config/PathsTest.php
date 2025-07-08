@@ -9,13 +9,13 @@ class PathsTest extends TestCase
 {
     public function testOutputPathConstant()
     {
-        $this->assertStringContainsString('/output/', Paths::OUTPUT);
-        $this->assertDirectoryExists(dirname(Paths::OUTPUT));
+        $this->assertStringContainsString('/output/', Paths::getOutputPath());
+        $this->assertDirectoryExists(dirname(Paths::getOutputPath()));
     }
 
     public function testStoragePathConstant()
     {
-        $this->assertStringContainsString('/storage/', Paths::STORAGE);
-        $this->assertDirectoryExists(dirname(Paths::STORAGE));
+        $this->assertStringContainsString('/storage/', Paths::getStoragePath());
+        $this->assertDirectoryExists(dirname(Paths::getStoragePath()));
     }
 } 

@@ -2,8 +2,15 @@
 
 namespace App\Infrastructure\Config;
 
-class Paths
+final class Paths
 {
-    public const string OUTPUT = __DIR__ . '/../../../output/';
-    public const string STORAGE = __DIR__ . '/../../../storage/';
-} 
+    public static function getOutputPath(): string
+    {
+        return dirname(__DIR__, 3) . '/output/';
+    }
+
+    public static function getStoragePath(): string
+    {
+        return dirname(__DIR__, 3) . '/storage/';
+    }
+}

@@ -62,7 +62,7 @@ readonly class ConvertOfficeFileHandler implements CommandInterface
     {
         $extension = pathinfo($sourcePath, PATHINFO_EXTENSION);
         $newPath = str_replace(".$extension", ".$format", $sourcePath);
-        $outputFile = Paths::OUTPUT . $newPath;
+        $outputFile = Paths::getOutputPath() . $newPath;
         file_put_contents($outputFile, $data);
 
         return $outputFile;
@@ -70,7 +70,7 @@ readonly class ConvertOfficeFileHandler implements CommandInterface
 
     private function relativeOutputPath(string $absolutePath): string
     {
-        $outputDir = realpath(Paths::OUTPUT);
+        $outputDir = realpath(Paths::getOutputPath());
         $abs = realpath($absolutePath);
 
         if ($outputDir && $abs && str_starts_with($abs, $outputDir)) {

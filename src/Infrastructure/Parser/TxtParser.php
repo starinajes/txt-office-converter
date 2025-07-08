@@ -12,7 +12,7 @@ class TxtParser implements ParserInterface
     {
         $offices = [];
         $current = [];
-        $fullPath = Paths::STORAGE . $filePath;
+        $fullPath = Paths::getStoragePath() . $filePath;
 
         foreach (file($fullPath) as $line) {
             $line = trim($line);
