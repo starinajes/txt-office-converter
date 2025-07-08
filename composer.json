@@ -2,7 +2,7 @@
     "name": "starjs/offices",
     "autoload": {
         "psr-4": {
-            "OfficeConverter\\": "app/"
+            "App\\": "src/"
         }
     },
     "authors": [
