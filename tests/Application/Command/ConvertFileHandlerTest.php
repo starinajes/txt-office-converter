@@ -2,13 +2,12 @@
 
 namespace Tests\Application\Command;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use App\Application\Command\ConvertFileHandler;
 use App\Application\Command\ConvertFileCommand;
 use App\Infrastructure\Parser\ParserFactory;
 use App\Infrastructure\Formatter\FormatterFactory;
-use App\Domain\Office\Entity\Office;
-use App\Domain\Car\Entity\Car;
 
 class ConvertFileHandlerTest extends TestCase
 {
@@ -24,7 +23,7 @@ class ConvertFileHandlerTest extends TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testHandleOfficeToJson()
     {
@@ -41,9 +40,13 @@ class ConvertFileHandlerTest extends TestCase
         $this->testFiles[] = $outputFile;
 
         $json = file_get_contents($outputFile);
+
         $this->assertStringContainsString('Офис 1', $json);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testHandleCarToXml()
     {
         $file = __DIR__ . '/test_cars.csv';
@@ -51,7 +54,7 @@ class ConvertFileHandlerTest extends TestCase
         $this->testFiles[] = $file;
 
         $handler = new ConvertFileHandler(new ParserFactory(), new FormatterFactory());
-        $command = new ConvertFileCommand($file, 'xml');
+        $command = new ConvertFileCommand($file, 'xml', 'car');
         $dto = $handler->handle($command);
         $outputFile = realpath($dto->outputFile) ?: $dto->outputFile;
 
@@ -59,6 +62,11 @@ class ConvertFileHandlerTest extends TestCase
         $this->testFiles[] = $outputFile;
 
         $xml = file_get_contents($outputFile);
-        $this->assertStringContainsString('<brand>Toyota</brand>', $xml);
+
+        if (!str_contains($xml, '<brand>Toyota</brand>')) {
+            fwrite(STDERR, "\nXML output:\n" . $xml . "\n");
+        }
+
+        $this->assertStringContainsString('<brand>Toyota</brand>', $xml, 'В XML нет ожидаемого значения <brand>Toyota</brand>');
     }
 } 

@@ -29,6 +29,11 @@ class CsvCarParserTest extends TestCase
         /** @var Car[] $cars */
         $cars = $parser->parse($file);
 
+        if (!is_array($cars)) {
+            fwrite(STDERR, "\nCsvCarParser вернул: ".var_export($cars, true)."\n");
+        }
+        $this->assertIsArray($cars, 'Парсер должен возвращать массив');
+        $this->assertNotEmpty($cars, 'Парсер вернул пустой массив, хотя в файле есть данные');
         $this->assertCount(2, $cars);
         $this->assertInstanceOf(Car::class, $cars[0]);
         $this->assertEquals('Toyota', $cars[0]->brand);

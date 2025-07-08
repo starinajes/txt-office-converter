@@ -5,35 +5,44 @@ use App\Domain\Common\Parser\ParserInterface;
 use App\Domain\Common\Entity\EntityInterface;
 use App\Domain\Car\Entity\Car;
 use RuntimeException;
+use SplFileObject;
 
 class CsvCarParser implements ParserInterface
 {
     /**
-     * @param string $filePath
+     * @throws RuntimeException
+     *
      * @return EntityInterface[]
      */
     public function parse(string $filePath): array
     {
-        $handle = fopen($filePath, 'r');
-
-        if ($handle === false) {
-            throw new RuntimeException("Не удалось открыть файл: $filePath");
+        if (!is_readable($filePath)) {
+            throw new RuntimeException("Файл не найден или недоступен: $filePath");
         }
+
+        $file = new SplFileObject($filePath, 'rb');
+        $file->setFlags(
+            SplFileObject::READ_CSV
+            | SplFileObject::SKIP_EMPTY
+            | SplFileObject::DROP_NEW_LINE
+        );
 
         $cars = [];
-        fgetcsv($handle, 0);
+        $first = true;
+        foreach ($file as $row) {
+            if ($first) { $first = false; continue; } // пропустить заголовок
+            if (!is_array($row) || $row === [null] || count($row) < 4) {
+                continue; // пустая или битая строка
+            }
 
-        while (($row = fgetcsv($handle, 0)) !== false) {
             [$id, $brand, $model, $year] = $row;
-
             $cars[] = new Car(
-                id: (int)$id,
+                id:    (int) $id,
                 brand: $brand,
                 model: $model,
-                year: (int)$year);
+                year:  (int) $year,
+            );
         }
-
-        fclose($handle);
 
         return $cars;
     }
