@@ -6,6 +6,10 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - .:/app
+      - ./output:/app/output
+      - ./src:/app/src
+      - ./storage:/app/storage
+      - ./tests:/app/tests
+      - ./vendor:/app/vendor
     tty: true
     user: "${UID}:${GID}"

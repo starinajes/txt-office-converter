@@ -1,0 +1,13 @@
+.git
+.gitignore
+.dockerignore
+.idea
+.env-local
+docker-compose.yml
+Dockerfile
+README.md
+target.md
+*.log
+*.swp
+*.tmp
+*.bak
