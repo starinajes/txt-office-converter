@@ -3,36 +3,31 @@
 namespace Tests\Infrastructure\Parser;
 
 use PHPUnit\Framework\TestCase;
-use App\Infrastructure\Parser\TxtParser;
+use App\Infrastructure\Parser\TxtOfficeParser;
 use App\Domain\Office\Entity\Office;
-use App\Infrastructure\Config\Paths;
 
 class TxtParserTest extends TestCase
 {
-    public function testParserReturnsOfficeObjects()
+    private array $testFiles = [];
+
+    protected function tearDown(): void
     {
-        $testFile = Paths::getStoragePath() . 'test_parser.txt';
-        file_put_contents($testFile, "id: 1\nname: Test\naddress: Addr\nphone: 123\n");
-        $parser = new TxtParser();
-        $offices = $parser->parse('test_parser.txt');
-
-        $this->assertIsArray($offices);
-        $this->assertInstanceOf(Office::class, $offices[0]);
-
-        unlink($testFile);
+        foreach ($this->testFiles as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        }
     }
 
-    public function testParserHandlesEmptyFile()
+    public function testParseOffice()
     {
-        $testFile = Paths::getStoragePath() . 'empty.txt';
-        file_put_contents($testFile, "");
-
-        $parser = new TxtParser();
-        $offices = $parser->parse('empty.txt');
-
-        $this->assertIsArray($offices);
-        $this->assertCount(0, $offices);
-
-        unlink($testFile);
+        $file = __DIR__ . '/test_offices.txt';
+        file_put_contents($file, "id: 1\nname: Офис 1\naddress: Адрес 1\nphone: 123\n\nid: 2\nname: Офис 2\naddress: Адрес 2\nphone: 456\n");
+        $this->testFiles[] = $file;
+        $parser = new TxtOfficeParser();
+        $offices = $parser->parse($file);
+        $this->assertCount(2, $offices);
+        $this->assertInstanceOf(Office::class, $offices[0]);
+        $this->assertEquals('Офис 1', $offices[0]->name);
     }
 } 

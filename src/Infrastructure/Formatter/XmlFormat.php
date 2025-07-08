@@ -2,35 +2,28 @@
 
 namespace App\Infrastructure\Formatter;
 
-use App\Domain\Office\Formatter\FormatInterface;
+use App\Domain\Common\Formatter\FormatInterface;
+use App\Domain\Common\Entity\EntityInterface;
 use SimpleXMLElement;
 use DOMDocument;
 
 class XmlFormat implements FormatInterface
 {
-    public function format(array $offices): string
+    public function format(array $entities): string
     {
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><companies></companies>');
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><items></items>');
 
-        foreach ($offices as $office) {
-            $company = $xml->addChild('company');
-            $company->addChild('company-id', $office->id);
-            $company->addChild('name', $office->name);
-            $company->addChild('address', $office->address);
-            $company->addChild('phone', $office->phone);
+        foreach ($entities as $entity) {
+            $item = $xml->addChild('item');
+            foreach ($entity->toArray() as $key => $value) {
+                $item->addChild($key, htmlspecialchars((string)$value));
+            }
         }
 
-        $xmlString = $xml->asXML();
-
-        return $this->formatXML($xmlString);
-    }
-
-    private function formatXML($xml): false|string
-    {
         $dom = new DOMDocument('1.0');
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
-        $dom->loadXML($xml);
+        $dom->loadXML($xml->asXML());
 
         return $dom->saveXML();
     }

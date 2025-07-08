@@ -2,17 +2,16 @@
 
 namespace App\Infrastructure\Parser;
 
-use App\Domain\Office\Parser\ParserInterface;
+use App\Domain\Common\Parser\ParserInterface;
 use App\Domain\Office\Entity\Office;
-use App\Infrastructure\Config\Paths;
 
-class TxtParser implements ParserInterface
+class TxtOfficeParser implements ParserInterface
 {
     public function parse(string $filePath): array
     {
         $offices = [];
         $current = [];
-        $fullPath = Paths::getStoragePath() . $filePath;
+        $fullPath = $filePath;
 
         foreach (file($fullPath) as $line) {
             $line = trim($line);

@@ -3,7 +3,6 @@
 namespace App\Application\Command;
 
 use Exception;
-use App\Domain\Office\Service\OfficeConverterService;
 use App\Infrastructure\Parser\ParserFactory;
 use App\Infrastructure\Formatter\FormatterFactory;
 
@@ -15,8 +14,7 @@ class CommandRegistry
     {
         if (self::$commands === null) {
             self::$commands = [
-                'convert' => fn() => new ConvertOfficeFileHandler(
-                    new OfficeConverterService(),
+                'convert' => fn() => new ConvertFileHandler(
                     new ParserFactory(),
                     new FormatterFactory()
                 ),
@@ -49,6 +47,6 @@ class CommandRegistry
         }
 
         // fromArgs должен быть у handler'а
-        return ConvertOfficeFileHandler::fromArgs($args);
+        return ConvertFileHandler::fromArgs($args);
     }
 } 

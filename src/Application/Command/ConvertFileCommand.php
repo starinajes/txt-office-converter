@@ -2,10 +2,11 @@
 
 namespace App\Application\Command;
 
-readonly class ConvertOfficeFileCommand
+readonly class ConvertFileCommand
 {
     public function __construct(
         public string $sourcePath,
-        public string $format
+        public string $format,
+        public ?string $type = null
     ) {}
 } 

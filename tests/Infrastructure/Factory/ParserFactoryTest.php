@@ -2,16 +2,16 @@
 
 namespace Tests\Infrastructure\Factory;
 
+use App\Infrastructure\Parser\TxtOfficeParser;
 use PHPUnit\Framework\TestCase;
 use App\Infrastructure\Parser\ParserFactory;
-use App\Infrastructure\Parser\TxtParser;
 
 class ParserFactoryTest extends TestCase
 {
     public function testCreateTxtParser()
     {
         $parser = ParserFactory::create('file.txt');
-        $this->assertInstanceOf(TxtParser::class, $parser);
+        $this->assertInstanceOf(TxtOfficeParser::class, $parser);
     }
 
     public function testCreateUnknownExtensionThrows()

@@ -2,7 +2,9 @@
 
 namespace App\Domain\Office\Entity;
 
-readonly class Office
+use App\Domain\Common\Entity\EntityInterface;
+
+readonly class Office implements EntityInterface
 {
     public function __construct(
         public int $id,
@@ -10,4 +12,14 @@ readonly class Office
         public string $address,
         public string $phone
     ) {}
+
+    public function toArray(): array
+    {
+        return [
+            'id'      => $this->id,
+            'name'    => $this->name,
+            'address' => $this->address,
+            'phone'   => $this->phone,
+        ];
+    }
 } 

@@ -5,7 +5,7 @@ namespace Tests\Application\Registry;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use App\Application\Command\CommandRegistry;
-use App\Application\Command\ConvertOfficeFileHandler;
+use App\Application\Command\ConvertFileHandler;
 
 class CommandRegistryTest extends TestCase
 {
@@ -15,7 +15,7 @@ class CommandRegistryTest extends TestCase
     public function testGetCommandReturnsHandler()
     {
         $handler = CommandRegistry::getCommand('convert');
-        $this->assertInstanceOf(ConvertOfficeFileHandler::class, $handler);
+        $this->assertInstanceOf(ConvertFileHandler::class, $handler);
     }
 
     public function testGetCommandThrowsOnUnknown()

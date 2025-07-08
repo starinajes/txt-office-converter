@@ -2,9 +2,8 @@
 
 namespace App\UI\Web;
 
-use App\Application\Command\ConvertOfficeFileCommand;
-use App\Application\Command\ConvertOfficeFileHandler;
-use App\Domain\Office\Service\OfficeConverterService;
+use App\Application\Command\ConvertFileCommand;
+use App\Application\Command\ConvertFileHandler;
 use App\Infrastructure\Parser\ParserFactory;
 use App\Infrastructure\Formatter\FormatterFactory;
 use Exception;
@@ -21,13 +20,12 @@ class OfficeController
         $sourcePath = $request['file'];
         $format = $request['format'];
 
-        $handler = new ConvertOfficeFileHandler(
-            new OfficeConverterService(),
+        $handler = new ConvertFileHandler(
             new ParserFactory(),
             new FormatterFactory()
         );
 
-        $command = new ConvertOfficeFileCommand($sourcePath, $format);
+        $command = new ConvertFileCommand($sourcePath, $format);
         $resultDTO = $handler->handle($command);
 
         return [

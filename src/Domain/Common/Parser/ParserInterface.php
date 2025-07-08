@@ -1,14 +1,13 @@
 <?php
+namespace App\Domain\Common\Parser;
 
-namespace App\Domain\Office\Parser;
-
-use App\Domain\Office\Entity\Office;
+use App\Domain\Common\Entity\EntityInterface;
 
 interface ParserInterface
 {
     /**
      * @param string $filePath
-     * @return Office[]
+     * @return EntityInterface[]
      */
     public function parse(string $filePath): array;
 } 
