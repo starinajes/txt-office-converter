@@ -24,10 +24,13 @@ class CsvCarParserTest extends TestCase
         $file = __DIR__ . '/test_cars.csv';
         file_put_contents($file, "id,brand,model,year\n1,Toyota,Corolla,2018\n2,BMW,320i,2020\n");
         $this->testFiles[] = $file;
+
         $parser = new CsvCarParser();
+        /** @var Car[] $cars */
         $cars = $parser->parse($file);
+
         $this->assertCount(2, $cars);
         $this->assertInstanceOf(Car::class, $cars[0]);
-        $this->assertEquals('Toyota', $cars[0]->getBrand());
+        $this->assertEquals('Toyota', $cars[0]->brand);
     }
 } 

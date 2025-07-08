@@ -25,7 +25,10 @@ class TxtParserTest extends TestCase
         file_put_contents($file, "id: 1\nname: Офис 1\naddress: Адрес 1\nphone: 123\n\nid: 2\nname: Офис 2\naddress: Адрес 2\nphone: 456\n");
         $this->testFiles[] = $file;
         $parser = new TxtOfficeParser();
+
+        /** @var Office[] $offices */
         $offices = $parser->parse($file);
+
         $this->assertCount(2, $offices);
         $this->assertInstanceOf(Office::class, $offices[0]);
         $this->assertEquals('Офис 1', $offices[0]->name);

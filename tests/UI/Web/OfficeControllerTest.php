@@ -24,6 +24,7 @@ class OfficeControllerTest extends TestCase
     public function testConvertActionUnknownFormat()
     {
         $controller = new OfficeController();
+
         $this->expectException(\Exception::class);
         $controller->convertAction(['file' => 'offices.txt', 'format' => 'unknown']);
     }
